@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mini-app-polis/identity/schema/principal.schema.json",
+  "title": "Principal",
+  "description": "A subject that can be authenticated and authorized. Humans and machines are the same shape on purpose: both resolve through one authorization decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "issuer", "subject", "roles", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable identifier owned by the principal store. Never the issuer's subject; issuers change, this does not."
+    },
+    "kind": {
+      "enum": ["human", "machine"],
+      "description": "Discriminator for audit and policy. NOT a proxy for privilege — privilege comes from roles."
+    },
+    "issuer": {
+      "type": "string",
+      "format": "uri",
+      "description": "The trusted issuer that authenticated this subject. Multi-issuer by design: the two Clerk tenants are different products with different audiences and stay separate."
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The issuer's subject claim (Clerk `sub`). Unique within an issuer, not across issuers."
+    },
+    "display_name": { "type": "string", "default": "" },
+    "email": { "type": ["string", "null"], "default": null },
+    "roles": {
+      "type": "array",
+      "items": { "$ref": "role.schema.json#/$defs/role_name" },
+      "uniqueItems": true,
+      "description": "Named bundles of scopes. A principal's effective scopes are the union across its roles."
+    },
+    "status": {
+      "enum": ["active", "suspended"],
+      "description": "A suspended principal fails authorization for every scope, including scopes its roles grant."
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "last_seen_at": { "type": ["string", "null"], "format": "date-time", "default": null }
+  }
+}

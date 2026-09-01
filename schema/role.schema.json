@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mini-app-polis/identity/schema/role.schema.json",
+  "title": "Role",
+  "description": "A named bundle of scopes. Roles are the only thing granted to principals; scopes are the only thing checked at an enforcement point.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "scopes"],
+  "properties": {
+    "name": { "$ref": "#/$defs/role_name" },
+    "description": { "type": "string", "default": "" },
+    "scopes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/scope" },
+      "uniqueItems": true,
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "role_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Lowercase kebab-case, e.g. `wcs-admin`, `pipeline-writer`."
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*){2}$",
+      "description": "Exactly three dot-separated segments: <domain>.<resource>.<action>, e.g. `wcs.notes.read`. Three segments is a deliberate constraint — it keeps scopes greppable and makes wildcard expansion unnecessary."
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "Shared role table for the fixture suite. Not the production catalog — a fixed, minimal vocabulary so every binding decides against identical inputs.",
+  "roles": [
+    { "name": "wcs-admin",       "description": "Human administrator of the WCS knowledge base.", "scopes": ["wcs.notes.read", "wcs.notes.write", "wcs.grants.write"] },
+    { "name": "wcs-reader",      "description": "Human with baseline read access.",               "scopes": ["wcs.notes.read"] },
+    { "name": "pipeline-writer", "description": "Machine that reports pipeline results.",          "scopes": ["pipeline.evaluations.write", "pipeline.findings.write"] },
+    { "name": "catalog-ingest",  "description": "Machine that ingests DJ set data.",               "scopes": ["catalog.sets.write", "catalog.plays.write"] }
+  ]
+}

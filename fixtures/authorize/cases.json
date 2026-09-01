@@ -1,0 +1,101 @@
+{
+  "_comment": "Conformance fixtures for authorize(). Every binding, in every language, must produce these decisions exactly. Roles come from ../roles.json.",
+  "cases": [
+    {
+      "name": "unauthenticated_caller_is_not_found",
+      "why": "resolve() returned nothing. Distinct from a denial: nobody to suspend, nobody to audit by id.",
+      "principal": null,
+      "scope": "wcs.notes.read",
+      "expected": { "allowed": false, "reason": "principal_not_found", "matched_role": null }
+    },
+    {
+      "name": "suspended_principal_denied_scope_its_role_grants",
+      "why": "Suspension is checked before roles. Reversing that order would make suspension advisory.",
+      "principal": { "id": "11111111-1111-4111-8111-111111111111", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_a", "roles": ["wcs-admin"], "status": "suspended" },
+      "scope": "wcs.notes.write",
+      "expected": { "allowed": false, "reason": "principal_suspended", "matched_role": null }
+    },
+    {
+      "name": "role_grants_scope",
+      "principal": { "id": "22222222-2222-4222-8222-222222222222", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_b", "roles": ["wcs-admin"], "status": "active" },
+      "scope": "wcs.notes.write",
+      "expected": { "allowed": true, "reason": "granted_by_role", "matched_role": "wcs-admin" }
+    },
+    {
+      "name": "machine_principal_resolves_through_the_same_path",
+      "why": "Humans and machines share one authorization decision. Nothing here branches on kind.",
+      "principal": { "id": "33333333-3333-4333-8333-333333333333", "kind": "machine", "issuer": "https://clerk.kaianolevine.com", "subject": "mch_deejay_cog", "roles": ["catalog-ingest"], "status": "active" },
+      "scope": "catalog.sets.write",
+      "expected": { "allowed": true, "reason": "granted_by_role", "matched_role": "catalog-ingest" }
+    },
+    {
+      "name": "matched_role_is_the_first_holding_role_in_declaration_order",
+      "why": "Pins the tie-break so audit events are reproducible across bindings.",
+      "principal": { "id": "44444444-4444-4444-8444-444444444444", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_c", "roles": ["wcs-reader", "wcs-admin"], "status": "active" },
+      "scope": "wcs.notes.read",
+      "expected": { "allowed": true, "reason": "granted_by_role", "matched_role": "wcs-reader" }
+    },
+    {
+      "name": "unknown_role_is_ignored_not_fatal",
+      "why": "A principal carrying a role this enforcement point was not configured with loses that role, not the ones it does hold.",
+      "principal": { "id": "55555555-5555-4555-8555-555555555555", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_d", "roles": ["not-configured-here", "wcs-reader"], "status": "active" },
+      "scope": "wcs.notes.read",
+      "expected": { "allowed": true, "reason": "granted_by_role", "matched_role": "wcs-reader" }
+    },
+    {
+      "name": "only_unknown_roles_denies",
+      "principal": { "id": "66666666-6666-4666-8666-666666666666", "kind": "machine", "issuer": "https://clerk.deejaytools.com", "subject": "mch_unknown", "roles": ["not-configured-here"], "status": "active" },
+      "scope": "wcs.notes.read",
+      "expected": { "allowed": false, "reason": "no_matching_scope", "matched_role": null }
+    },
+    {
+      "name": "authenticated_but_lacking_scope",
+      "why": "The common case, and the one a boolean API cannot distinguish from a forged token.",
+      "principal": { "id": "77777777-7777-4777-8777-777777777777", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_e", "roles": ["wcs-reader"], "status": "active" },
+      "scope": "wcs.notes.write",
+      "expected": { "allowed": false, "reason": "no_matching_scope", "matched_role": null }
+    },
+    {
+      "name": "explicit_grant_allows_named_resource",
+      "principal": { "id": "88888888-8888-4888-8888-888888888888", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_f", "roles": [], "status": "active" },
+      "scope": "wcs.notes.read",
+      "resource": "note-42",
+      "explicit_grants": [["wcs.notes.read", "note-42"]],
+      "expected": { "allowed": true, "reason": "granted_by_explicit_grant", "matched_role": null }
+    },
+    {
+      "name": "explicit_grant_does_not_leak_to_other_resources",
+      "principal": { "id": "99999999-9999-4999-8999-999999999999", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_g", "roles": [], "status": "active" },
+      "scope": "wcs.notes.read",
+      "resource": "note-43",
+      "explicit_grants": [["wcs.notes.read", "note-42"]],
+      "expected": { "allowed": false, "reason": "no_matching_scope", "matched_role": null }
+    },
+    {
+      "name": "explicit_grant_requires_a_resource_to_match",
+      "why": "A scope-level check must never be satisfied by an instance-level grant.",
+      "principal": { "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_h", "roles": [], "status": "active" },
+      "scope": "wcs.notes.read",
+      "resource": null,
+      "explicit_grants": [["wcs.notes.read", "note-42"]],
+      "expected": { "allowed": false, "reason": "no_matching_scope", "matched_role": null }
+    },
+    {
+      "name": "role_takes_precedence_over_explicit_grant",
+      "why": "Both would allow; the reason recorded must be the role, so revoking the grant does not look like it changed access.",
+      "principal": { "id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", "kind": "human", "issuer": "https://clerk.kaianolevine.com", "subject": "user_i", "roles": ["wcs-reader"], "status": "active" },
+      "scope": "wcs.notes.read",
+      "resource": "note-42",
+      "explicit_grants": [["wcs.notes.read", "note-42"]],
+      "expected": { "allowed": true, "reason": "granted_by_role", "matched_role": "wcs-reader" }
+    },
+    {
+      "name": "suspension_beats_explicit_grant_too",
+      "principal": { "id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc", "kind": "machine", "issuer": "https://clerk.kaianolevine.com", "subject": "mch_revoked", "roles": [], "status": "suspended" },
+      "scope": "catalog.sets.write",
+      "resource": "set-7",
+      "explicit_grants": [["catalog.sets.write", "set-7"]],
+      "expected": { "allowed": false, "reason": "principal_suspended", "matched_role": null }
+    }
+  ]
+}

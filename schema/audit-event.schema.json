@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mini-app-polis/identity/schema/audit-event.schema.json",
+  "title": "AuditEvent",
+  "description": "One authorization decision, recorded. Emitted for allow and deny alike — a trail that only records denials cannot answer who did the thing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "occurred_at", "enforcement_point", "scope", "allowed", "reason"],
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "enforcement_point": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Which conformant implementation made this decision, e.g. `api-kaianolevine-com`. The spec has N enforcement points; an event that cannot name its own is unattributable."
+    },
+    "principal_id": { "type": ["string", "null"], "format": "uuid", "default": null },
+    "principal_kind": { "enum": ["human", "machine", null], "default": null },
+    "issuer": { "type": ["string", "null"], "format": "uri", "default": null },
+    "subject": { "type": ["string", "null"], "default": null },
+    "scope": { "$ref": "role.schema.json#/$defs/scope" },
+    "resource": { "type": ["string", "null"], "default": null },
+    "allowed": { "type": "boolean" },
+    "reason": { "$ref": "authorization-decision.schema.json#/properties/reason" },
+    "request_id": { "type": ["string", "null"], "default": null }
+  }
+}

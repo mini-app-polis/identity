@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mini-app-polis/identity/schema/authorization-decision.schema.json",
+  "title": "AuthorizationDecision",
+  "description": "The result of authorize(). Always returned, never thrown: the caller decides the HTTP shape, and a denial still carries a reason the audit trail can record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["allowed", "scope", "reason"],
+  "properties": {
+    "allowed": { "type": "boolean" },
+    "principal_id": { "type": ["string", "null"], "format": "uuid", "default": null },
+    "scope": { "$ref": "role.schema.json#/$defs/scope" },
+    "resource": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Optional instance-level target, e.g. a note id. Absent means the decision is scope-level only."
+    },
+    "matched_role": { "type": ["string", "null"], "default": null },
+    "reason": {
+      "enum": [
+        "granted_by_role",
+        "granted_by_explicit_grant",
+        "no_matching_scope",
+        "principal_suspended",
+        "principal_not_found",
+        "issuer_not_trusted",
+        "credential_invalid"
+      ]
+    }
+  }
+}

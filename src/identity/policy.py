@@ -21,7 +21,8 @@ Reversing 2 and 3 would make suspension a suggestion.
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Set
+from collections.abc import Mapping
+from collections.abc import Set as AbstractSet
 
 from .types import AuthorizationDecision, Principal, Role
 
@@ -47,7 +48,7 @@ def authorize(
     roles: Mapping[str, Role],
     *,
     resource: str | None = None,
-    explicit_grants: Set[tuple[str, str]] | None = None,
+    explicit_grants: AbstractSet[tuple[str, str]] | None = None,
 ) -> AuthorizationDecision:
     """Decide, and say why. Never raises.
 
@@ -82,7 +83,11 @@ def authorize(
                 matched_role=name,
             )
 
-    if resource is not None and explicit_grants and (scope, resource) in explicit_grants:
+    if (
+        resource is not None
+        and explicit_grants
+        and (scope, resource) in explicit_grants
+    ):
         return AuthorizationDecision(
             allowed=True,
             scope=scope,

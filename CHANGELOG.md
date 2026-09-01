@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/mini-app-polis/identity/compare/v1.0.0...v1.0.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* follow up wiring ([c494c1c](https://github.com/mini-app-polis/identity/commit/c494c1c0a0ef79143a1b52d190afa888163a294f))
+
 # 1.0.0 (2026-09-01)
 
 

@@ -11,7 +11,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# The SQLAlchemy-backed principal store and audit sink. Optional because a
+# calling principal (a cog) needs the contract and the verifier but has no
+# store to resolve against; only an enforcement point does.
+store = [
+    "sqlalchemy>=2.0",
+]
 dev = [
+    "aiosqlite>=0.20.0",
+    "sqlalchemy>=2.0",
     "pytest>=8.3.2",
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=5.0.0",

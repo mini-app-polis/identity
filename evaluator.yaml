@@ -13,14 +13,10 @@ exemptions:
   - rule: DOC-004
     reason: "identity reads no environment of its own. Configuration is passed in by the consuming service: ClerkIssuer objects and MachineKey values are constructor arguments, resolved from that service's own settings and documented in that service's .env.example (CD-019). A .env.example here would document variables the library never reads."
 
-deferrals:
-  - rule: PY-008
-    reason: "No .pre-commit-config.yaml yet. CI runs ruff check, ruff format --check, and mypy on every push, so the checks themselves are enforced — pre-commit would move them earlier, not add coverage."
-    until: null
-
-  - rule: DOC-005
-    reason: "docs/decisions/ exists but is empty. The decision that produced this library is recorded in ecosystem-standards as ADR-008 (named machine keys as the machine identity), which is where the ecosystem-wide consequences belong. The library-local decisions still owed an ADR are the store schema's table prefixing over a Postgres schema (so SQLite-backed test suites can host it) and the absence of a foreign key from identity_audit_events.principal_id (so the audit trail survives principal deletion)."
-    until: null
+# No active deferrals. The ecosystem-wide decision behind this library is
+# ecosystem-standards ADR-008; the library-local ones are ADR-001 (prefixed
+# tables over a Postgres schema) and ADR-002 (no foreign key from audit
+# events to principals).
 
 # CD-002, CD-009, CD-010 (Sentry, shared logger, observability) are not in
 # shared-library scope — this repo has no service entry point. TEST-012 is

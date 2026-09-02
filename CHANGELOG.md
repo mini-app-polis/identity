@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/mini-app-polis/identity/compare/v1.1.3...v1.1.4) (2026-09-02)
+
+
+### Bug Fixes
+
+* **release:** re-lock as part of the release ([0c8102e](https://github.com/mini-app-polis/identity/commit/0c8102e3bec13ea7301725a2ad79d9db7af143ea))
+
 ## [1.1.3](https://github.com/mini-app-polis/identity/compare/v1.1.2...v1.1.3) (2026-09-02)
 
 

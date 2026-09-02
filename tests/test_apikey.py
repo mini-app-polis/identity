@@ -118,3 +118,18 @@ async def test_unknown_credential_with_no_issuer_is_rejected() -> None:
     chain = ChainVerifier(_verifier(), None)
     with pytest.raises(CredentialInvalid):
         await chain.verify("k_bogus")
+
+
+async def test_non_ascii_credential_is_rejected_not_a_crash() -> None:
+    """compare_digest raises TypeError on non-ASCII str.
+
+    In the auth path that is a 500 where a 401 belongs, and it is reachable by
+    anyone who can send a header.
+    """
+    with pytest.raises(CredentialInvalid):
+        await _verifier().verify("k_déjà_vu_ключ")
+
+
+async def test_non_ascii_configured_key_still_matches() -> None:
+    v = ApiKeyVerifier([MachineKey(name="odd-cog", key="k_ключ")])
+    assert (await v.verify("k_ключ")).subject == "odd-cog"

@@ -58,14 +58,6 @@ class ApiKeyVerifier:
     def known_names(self) -> tuple[str, ...]:
         return tuple(m.name for m in self._machines)
 
-    def matches(self, credential: str) -> bool:
-        """Whether this credential looks like one of our keys.
-
-        Used to route a credential to this verifier rather than an issuer,
-        without raising when it belongs to the other path.
-        """
-        return self._match(credential) is not None
-
     def _match(self, credential: str) -> str | None:
         """Return the matching machine name, in constant time.
 
@@ -75,9 +67,15 @@ class ApiKeyVerifier:
         how many leading characters were correct — either leaks information
         about a secret to whoever is guessing it.
         """
+        # Encoded to bytes: compare_digest raises TypeError on a str
+        # containing non-ASCII, which in the auth path would be a crash where
+        # a rejection belongs.
+        presented = credential.encode("utf-8", "surrogatepass")
         found: str | None = None
         for machine in self._machines:
-            if hmac.compare_digest(credential, machine.key):
+            if hmac.compare_digest(
+                presented, machine.key.encode("utf-8", "surrogatepass")
+            ):
                 found = machine.name
         return found
 

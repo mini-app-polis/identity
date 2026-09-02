@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/mini-app-polis/identity/compare/v1.1.0...v1.1.1) (2026-09-02)
+
+
+### Bug Fixes
+
+* **apikey:** compare keys as bytes and drop the unused matches() ([accda48](https://github.com/mini-app-polis/identity/commit/accda4897d3b3d88e0b9d35e5fef9545b176bc74))
+
 # [1.1.0](https://github.com/mini-app-polis/identity/compare/v1.0.2...v1.1.0) (2026-09-02)
 
 

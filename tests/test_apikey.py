@@ -92,7 +92,6 @@ async def test_key_shaped_credential_never_reaches_the_issuer() -> None:
     assert issuer.calls == []
 
 
-
 async def test_a_machine_key_never_reaches_the_issuer() -> None:
     """Machines authenticate locally; nothing about them leaves the process."""
     issuer = _FakeIssuer()

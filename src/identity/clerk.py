@@ -44,7 +44,6 @@ class ClerkIssuer:
     jwks_url: str
 
 
-
 class ClerkVerifier:
     """Verifies Clerk credentials against a fixed set of trusted issuers."""
 
@@ -153,4 +152,3 @@ class ClerkVerifier:
             doc: dict[str, Any] = resp.json()
         self._jwks_cache[jwks_url] = (now + _JWKS_TTL_SECS, doc)
         return doc
-

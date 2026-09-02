@@ -34,7 +34,6 @@ from .errors import CredentialInvalid, IssuerNotTrusted
 from .types import PrincipalKind, VerifiedSubject
 
 _JWKS_TTL_SECS = 300.0
-_CLERK_M2M_VERIFY_URL = "https://api.clerk.com/v1/m2m_tokens/verify"
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,9 +42,7 @@ class ClerkIssuer:
 
     issuer: str
     jwks_url: str
-    # Present only for tenants that mint M2M opaque tokens. A tenant without
-    # one can still verify JWTs; it simply cannot authenticate machines.
-    secret_key: str | None = None
+
 
 
 class ClerkVerifier:
@@ -68,17 +65,11 @@ class ClerkVerifier:
         return tuple(self._issuers)
 
     async def verify(self, credential: str) -> VerifiedSubject:
-        """Verify a credential. Raises; never returns None.
-
-        The shape test is structural: a JWT has exactly two dots, an opaque
-        token has none. This is Clerk's own distinction, not a heuristic.
-        """
+        """Verify a Clerk session JWT. Raises; never returns None."""
         if not credential:
             raise CredentialInvalid("empty credential")
 
-        if credential.count(".") == 2:
-            return await self._verify_jwt(credential)
-        return await self._verify_opaque(credential)
+        return await self._verify_jwt(credential)
 
     async def _verify_jwt(self, token: str) -> VerifiedSubject:
         try:
@@ -163,40 +154,3 @@ class ClerkVerifier:
         self._jwks_cache[jwks_url] = (now + _JWKS_TTL_SECS, doc)
         return doc
 
-    async def _verify_opaque(self, token: str) -> VerifiedSubject:
-        """Verify an M2M opaque token via Clerk's BAPI.
-
-        Tried against each tenant configured with a secret key. An opaque
-        token carries no issuer claim, so which tenant minted it can only be
-        discovered by asking.
-        """
-        candidates = [i for i in self._issuers.values() if i.secret_key]
-        if not candidates:
-            raise CredentialInvalid("no issuer is configured for machine tokens")
-
-        for issuer in candidates:
-            try:
-                async with httpx.AsyncClient(timeout=self._http_timeout) as client:
-                    resp = await client.post(
-                        _CLERK_M2M_VERIFY_URL,
-                        headers={
-                            "Authorization": f"Bearer {issuer.secret_key}",
-                            "Content-Type": "application/json",
-                        },
-                        json={"token": token},
-                    )
-            except httpx.HTTPError:
-                continue
-            if not resp.is_success:
-                continue
-            data = resp.json()
-            subject = data.get("subject") or data.get("sub")
-            if isinstance(subject, str) and subject:
-                return VerifiedSubject(
-                    issuer=issuer.issuer,
-                    subject=subject,
-                    kind="machine",
-                    claims=dict(data) if isinstance(data, dict) else {},
-                )
-
-        raise CredentialInvalid("opaque token rejected by every trusted issuer")

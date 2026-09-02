@@ -92,32 +92,26 @@ async def test_key_shaped_credential_never_reaches_the_issuer() -> None:
     assert issuer.calls == []
 
 
-async def test_unmatched_key_falls_back_to_the_issuer() -> None:
-    """A cog still on an issuer-minted opaque token must keep working.
 
-    Keys are checked first because they are local; only a credential matching
-    no key costs a round trip. Removing this fallback silently 401s every
-    machine that has not yet been given a key.
-    """
-    issuer = _FakeIssuer()
-    chain = ChainVerifier(_verifier(), issuer)
-    subject = await chain.verify("opaque_token_no_dots")
-    assert subject.subject == "user_1"
-    assert issuer.calls == ["opaque_token_no_dots"]
-
-
-async def test_a_matching_key_never_reaches_the_issuer() -> None:
-    """Once a machine has its own key it stops leaving the process."""
+async def test_a_machine_key_never_reaches_the_issuer() -> None:
+    """Machines authenticate locally; nothing about them leaves the process."""
     issuer = _FakeIssuer()
     chain = ChainVerifier(_verifier(), issuer)
     assert (await chain.verify("k_deejay_aaaa")).subject == "deejay-cog"
     assert issuer.calls == []
 
 
-async def test_unknown_credential_with_no_issuer_is_rejected() -> None:
-    chain = ChainVerifier(_verifier(), None)
+async def test_unknown_key_is_rejected_not_retried_upstream() -> None:
+    """A credential matching no configured key is simply not one of ours.
+
+    There is no issuer fallback: every machine holds a key, so retrying
+    upstream would only add a network call to a request already known bad.
+    """
+    issuer = _FakeIssuer()
+    chain = ChainVerifier(_verifier(), issuer)
     with pytest.raises(CredentialInvalid):
         await chain.verify("k_bogus")
+    assert issuer.calls == []
 
 
 async def test_non_ascii_credential_is_rejected_not_a_crash() -> None:

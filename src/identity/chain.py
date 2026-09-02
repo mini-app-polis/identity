@@ -8,15 +8,11 @@ which mechanism a given credential belongs to.
 Routing is structural where it can be. A JWT is the only shape with two dots,
 so it goes straight to the issuer and never touches the key path.
 
-Anything else is tried against the configured keys first, because that check
-is local and cheap. Only a credential matching no key falls through to the
-issuer, which is the one shape that costs a network call. That ordering
-matters: it means a fleet fully migrated to keys never leaves the process to
-authenticate, while one still part-way through keeps working.
-
-The fallback is deliberately last and deliberately temporary. Every machine
-that gains its own key stops reaching it, and when none are left the issuer
-can be dropped from the machine path entirely.
+Anything else is a machine key, matched locally against configuration. There
+is no fallback to the issuer: every machine holds its own key, so a credential
+matching none of them is simply not one of ours. Authenticating machines
+through an issuer would mean a network call per request, which is the thing
+this design keeps off the request path.
 """
 
 from __future__ import annotations
@@ -24,7 +20,7 @@ from __future__ import annotations
 from typing import Protocol
 
 from .apikey import ApiKeyVerifier
-from .errors import CredentialInvalid, IdentityError
+from .errors import CredentialInvalid
 from .types import VerifiedSubject
 
 
@@ -55,14 +51,7 @@ class ChainVerifier:
                 raise CredentialInvalid("no issuer is configured")
             return await self._issuer.verify(credential)
 
-        # Otherwise: a named key, or an issuer-minted opaque token. Keys first
-        # because they are verified locally; the issuer costs a round trip.
-        if self._api_keys is not None:
-            try:
-                return await self._api_keys.verify(credential)
-            except IdentityError:
-                pass
-
-        if self._issuer is None:
-            raise CredentialInvalid("no configured machine holds this key")
-        return await self._issuer.verify(credential)
+        # Otherwise it is a machine key, verified locally against config.
+        if self._api_keys is None:
+            raise CredentialInvalid("no machine keys are configured")
+        return await self._api_keys.verify(credential)

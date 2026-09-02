@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/mini-app-polis/identity/compare/v1.1.1...v1.1.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* **clerk:** remove the M2M opaque-token path ([014cee8](https://github.com/mini-app-polis/identity/commit/014cee8e1c2d9fb7563f2c051401dc1da1bd29fc))
+* **clerk:** remove the M2M opaque-token path ([5290634](https://github.com/mini-app-polis/identity/commit/5290634cd8187810db7b22fe0119ad2132d68110))
+
 ## [1.1.1](https://github.com/mini-app-polis/identity/compare/v1.1.0...v1.1.1) (2026-09-02)
 
 

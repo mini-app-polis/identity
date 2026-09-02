@@ -1,6 +1,6 @@
 [project]
 name = "identity"
-version = "1.1.1"
+version = "1.1.2"
 description = "Cross-ecosystem identity contract: principals, roles, scopes, and the four-function binding every enforcement point implements."
 readme = "README.md"
 license = { text = "MIT" }

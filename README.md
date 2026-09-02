@@ -21,6 +21,30 @@ rules, not designs, and no service depends on it.
 | The principal store schema | A shared runtime store |
 | The cross-language fixture suite | Per-service business rules |
 
+## Two ways to authenticate, one way to authorize
+
+Machines and humans prove identity differently, and pretending otherwise
+produces a worse version of both.
+
+**Machines hold a named API key.** The key *is* the name. Verification is a
+constant-time comparison against keys held in configuration — no token to
+mint, no issuer to call on the request path, and nothing for the caller to
+assert. Impersonating a machine requires possessing its key rather than
+claiming its name.
+
+**Humans hold issuer sessions.** People need expiry, revocation and a login
+flow, which a long-lived string does not have.
+
+Key material never reaches the principal store. Keys live in deployment
+configuration; the store holds names, status and roles. A database dump
+exposes no credentials, and rotating a key is a configuration change rather
+than a migration.
+
+Both paths converge immediately after verification: one principal table, one
+role model, one authorization decision, one audit trail. `authorize` does not
+branch on how the caller was authenticated, and could not — by then the
+distinction is gone.
+
 ## The four functions
 
 Every enforcement point implements the same four, in the same order, once per request:

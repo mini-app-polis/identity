@@ -17,7 +17,11 @@
 CREATE TABLE IF NOT EXISTS identity_issuers (
   issuer        TEXT PRIMARY KEY,
   display_name  TEXT NOT NULL DEFAULT '',
-  jwks_url      TEXT NOT NULL,
+  -- Null for issuers that do not use signed tokens. A named-API-key issuer
+  -- verifies by local comparison against configuration, so there is no key
+  -- set to fetch. Key material is never stored here or anywhere in this
+  -- schema: the store holds names, status and roles only.
+  jwks_url      TEXT,
   enabled       BOOLEAN NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );

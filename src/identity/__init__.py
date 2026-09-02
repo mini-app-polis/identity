@@ -4,6 +4,8 @@ One specification, N conformant enforcement points — explicitly not a central
 auth service on the request path.
 """
 
+from .apikey import API_KEY_ISSUER, ApiKeyVerifier, MachineKey
+from .chain import ChainVerifier
 from .contract import (
     AuditSink,
     Authorizer,
@@ -24,15 +26,19 @@ from .types import (
 )
 
 __all__ = [
+    "API_KEY_ISSUER",
+    "ApiKeyVerifier",
     "AuditEvent",
     "AuditSink",
     "AuthorizationDecision",
     "Authorizer",
+    "ChainVerifier",
     "CredentialInvalid",
     "DecisionReason",
     "IdentityBinding",
     "IdentityError",
     "IssuerNotTrusted",
+    "MachineKey",
     "Principal",
     "PrincipalKind",
     "PrincipalResolver",

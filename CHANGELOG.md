@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/mini-app-polis/identity/compare/v1.1.4...v1.2.0) (2026-09-03)
+
+
+### Features
+
+* **security:** call the shared security workflow ([1869a8e](https://github.com/mini-app-polis/identity/commit/1869a8eb64339399436a379f526f6e88cf90ca2d))
+
 ## [1.1.4](https://github.com/mini-app-polis/identity/compare/v1.1.3...v1.1.4) (2026-09-02)
 
 

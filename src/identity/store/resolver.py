@@ -36,6 +36,12 @@ class SqlAlchemyPrincipalStore:
 
     @property
     def enforcement_point(self) -> str:
+        """The name this store stamps on the audit rows it writes.
+
+        One specification, N enforcement points: the same decision
+        function runs in each service, so an audit row is only
+        attributable if it says which one produced it.
+        """
         return self._enforcement_point
 
     async def resolve(self, subject: VerifiedSubject) -> Principal | None:
@@ -105,6 +111,12 @@ class SqlAlchemyPrincipalStore:
     async def load_explicit_grants(
         self, principal_id: uuid.UUID
     ) -> set[tuple[str, str]]:
+        """The ``(scope, resource)`` pairs granted to this principal directly.
+
+        Loaded only when a request names a resource — a route with no
+        resource in its path cannot be widened by a per-resource grant,
+        so the query is skipped rather than run and discarded.
+        """
         rows = (
             await self._session.execute(
                 select(ExplicitGrant.scope, ExplicitGrant.resource).where(

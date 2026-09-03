@@ -44,6 +44,14 @@ class VerifiedSubject:
 
 @dataclass(frozen=True, slots=True)
 class Role:
+    """A named bundle of scopes.
+
+    Roles are the only thing granted. Humans and machines resolve
+    through the same vocabulary, so an authorization decision does not
+    branch on what kind of principal is asking — which is what keeps
+    "is this a service?" from becoming an authority check.
+    """
+
     name: str
     scopes: frozenset[str]
     description: str = ""

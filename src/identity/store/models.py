@@ -53,6 +53,8 @@ class Issuer(IdentityBase):
 
 
 class Role(IdentityBase):
+    """A grantable role. The row exists so the name has a definition."""
+
     __tablename__ = "identity_roles"
 
     name: Mapped[str] = mapped_column(String, primary_key=True)
@@ -63,6 +65,13 @@ class Role(IdentityBase):
 
 
 class RoleScope(IdentityBase):
+    """One scope carried by one role.
+
+    Composite key (role_name, scope): a role is its set of scopes, and
+    changing what a role grants is an insert or delete here rather than
+    a migration.
+    """
+
     __tablename__ = "identity_role_scopes"
 
     role_name: Mapped[str] = mapped_column(
@@ -72,6 +81,22 @@ class RoleScope(IdentityBase):
 
 
 class Principal(IdentityBase):
+    """One subject this ecosystem knows, human or machine.
+
+    Identity is ``(issuer, subject)`` — the issuer that proved the
+    credential plus the subject it named. A machine's issuer is the
+    named-key mechanism; a human's is a Clerk tenant.
+
+    **No key material is stored here, not plaintext and not hashed.**
+    The table records who exists and what they may do; the secret that
+    proves a machine is that machine lives in Doppler and reaches the
+    API as an environment variable. That is why rotating a key needs no
+    migration, and why a dump of this table discloses no credential.
+
+    ``status`` gates before roles are consulted: a suspended principal
+    is denied whatever it holds, checked first and deliberately.
+    """
+
     __tablename__ = "identity_principals"
     __table_args__ = (
         UniqueConstraint(
@@ -98,6 +123,14 @@ class Principal(IdentityBase):
 
 
 class PrincipalRole(IdentityBase):
+    """A role held by a principal.
+
+    ``granted_by`` and ``granted_at`` are on the row rather than in a
+    separate log so the grant carries its own provenance: the question
+    "who gave this principal this role, and when" is answerable from
+    the grant itself.
+    """
+
     __tablename__ = "identity_principal_roles"
 
     principal_id: Mapped[uuid.UUID] = mapped_column(
@@ -115,6 +148,13 @@ class PrincipalRole(IdentityBase):
 
 
 class ExplicitGrant(IdentityBase):
+    """A scope granted on one named resource, outside any role.
+
+    The escape hatch for "this principal, this document" without
+    inventing a role per resource. Consulted after roles in the decision
+    precedence, so a grant can widen access but never narrows it.
+    """
+
     __tablename__ = "identity_explicit_grants"
 
     principal_id: Mapped[uuid.UUID] = mapped_column(
@@ -131,6 +171,16 @@ class ExplicitGrant(IdentityBase):
 
 
 class AuditEventRow(IdentityBase):
+    """One authorization decision, written on both branches.
+
+    Allow and deny are both recorded — an audit trail that only keeps
+    refusals cannot show what an account actually did, and one that only
+    keeps successes cannot show what it tried. Each row carries the
+    enforcement point, the principal, the scope, the outcome and the
+    reason, so a reviewer can reconstruct which guard ran, for whom,
+    against what, with what result and on what grounds.
+    """
+
     __tablename__ = "identity_audit_events"
     __table_args__ = (
         Index("idx_identity_audit_occurred_at", "occurred_at"),

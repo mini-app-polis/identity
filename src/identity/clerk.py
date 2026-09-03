@@ -61,6 +61,14 @@ class ClerkVerifier:
 
     @property
     def trusted_issuers(self) -> tuple[str, ...]:
+        """The issuers this verifier will accept a token from.
+
+        Built from configuration at startup, not consulted per request.
+        A token whose ``iss`` is absent from this set is rejected before
+        any signature work — the two Clerk tenants are separate products
+        with separate audiences, and a token from one is not a
+        credential for the other.
+        """
         return tuple(self._issuers)
 
     async def verify(self, credential: str) -> VerifiedSubject:

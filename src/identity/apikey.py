@@ -56,6 +56,13 @@ class ApiKeyVerifier:
 
     @property
     def known_names(self) -> tuple[str, ...]:
+        """The machine names this verifier can recognise.
+
+        Names only. Key material is never returned, logged, or stored —
+        keys live in Doppler, reach the process as
+        ``<MACHINE_NAME>_API_KEY`` environment variables, and exist here
+        only as comparison targets.
+        """
         return tuple(m.name for m in self._machines)
 
     def _match(self, credential: str) -> str | None:

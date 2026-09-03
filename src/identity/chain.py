@@ -27,7 +27,14 @@ from .types import VerifiedSubject
 class SubjectVerifier(Protocol):
     """Anything that can turn a credential into a verified subject."""
 
-    async def verify(self, credential: str) -> VerifiedSubject: ...
+    async def verify(self, credential: str) -> VerifiedSubject:
+        """Prove a credential and return the subject it names.
+
+        Raises rather than returning None: a verifier that cannot prove
+        a credential has not identified anyone, and an optional return
+        invites a caller to treat "unproven" as "anonymous but fine".
+        """
+        ...
 
 
 class ChainVerifier:
@@ -42,6 +49,18 @@ class ChainVerifier:
         self._issuer = issuer_verifier
 
     async def verify(self, credential: str) -> VerifiedSubject:
+        """Route a credential to the mechanism that can prove it.
+
+        Routing is structural, by dot count, with no fallback between
+        the two paths: two dots is a JWT and goes to the issuer
+        verifier; anything else is a named machine key and is compared
+        in process against configuration.
+
+        No fallback is the point. If a JWT fails verification the answer
+        is denial, not "try it as a machine key" — a credential that
+        could be retried down the other path would let a caller who
+        controls its shape choose which check it faces.
+        """
         if not credential:
             raise CredentialInvalid("empty credential")
 

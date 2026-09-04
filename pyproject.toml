@@ -40,6 +40,13 @@ packages = ["src/identity"]
 "schema" = "identity/schema"
 "fixtures" = "identity/fixtures"
 
+[tool.ruff]
+# PY-002 / PY-010. The line length was already what ruff defaults to; the
+# rules ask for it to be stated rather than inherited, so a change to
+# ruff's default cannot silently reformat this repo.
+line-length = 88
+target-version = "py311"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/mini-app-polis/identity/compare/v1.3.0...v1.3.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **deps:** update pyjwt[crypto] requirement from >=2.9 to >=2.13.0 ([072fe15](https://github.com/mini-app-polis/identity/commit/072fe15d53f65f1f28716f5d8b9563a6e7367eba))
+
 # [1.3.0](https://github.com/mini-app-polis/identity/compare/v1.2.0...v1.3.0) (2026-09-04)
 
 

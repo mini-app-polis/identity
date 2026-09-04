@@ -7,7 +7,7 @@ license = { text = "MIT" }
 requires-python = ">=3.11"
 dependencies = [
     "httpx",
-    "pyjwt[crypto]>=2.9",
+    "pyjwt[crypto]>=2.13.0",
 ]
 
 [project.optional-dependencies]

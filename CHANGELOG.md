@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/mini-app-polis/identity/compare/v1.2.0...v1.3.0) (2026-09-04)
+
+
+### Features
+
+* **deps:** automate dependency updates ([d2a1bfb](https://github.com/mini-app-polis/identity/commit/d2a1bfb207e1b1ef2bdcc7700d8578c72c5ee48d))
+
 # [1.2.0](https://github.com/mini-app-polis/identity/compare/v1.1.4...v1.2.0) (2026-09-03)
 
 

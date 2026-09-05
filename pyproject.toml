@@ -9,7 +9,7 @@
 # fix is to rename the import, not the distribution.
 # See common-python-utils/docs/pypi-package-publishing.md §6.
 name = "miniapppolis-identity"
-version = "1.3.2"
+version = "2.0.0"
 description = "Cross-ecosystem identity contract: principals, roles, scopes, and the four-function binding every enforcement point implements."
 authors = [{ name = "Kaiano Levine" }]
 readme = "README.md"

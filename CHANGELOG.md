@@ -1,3 +1,14 @@
+# [2.0.0](https://github.com/mini-app-polis/identity/compare/v1.3.2...v2.0.0) (2026-09-05)
+
+
+* feat!: publish to PyPI as miniapppolis-identity ([28fb1a0](https://github.com/mini-app-polis/identity/commit/28fb1a06085e1e71a5b78862d11fa7b53bae254b))
+
+
+### BREAKING CHANGES
+
+* the distribution is named miniapppolis-identity.
+Anything declaring identity, including by git ref, must be updated.
+
 ## [1.3.2](https://github.com/mini-app-polis/identity/compare/v1.3.1...v1.3.2) (2026-09-05)
 
 

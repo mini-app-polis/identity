@@ -1,7 +1,17 @@
 [project]
-name = "identity"
+# Distribution name, not the import name. `identity` was unavailable on
+# PyPI — it is taken by an unrelated Microsoft auth library — so the
+# distribution carries the ecosystem prefix while the import stays
+# `identity`, unchanged at every call site. One consequence to know about:
+# the import name is now shared with a package we do not own, so any repo
+# that ever installs PyPI `identity` alongside this one gets a top-level
+# module collision. Nothing in the fleet does today; if that changes, the
+# fix is to rename the import, not the distribution.
+# See common-python-utils/docs/pypi-package-publishing.md §6.
+name = "miniapppolis-identity"
 version = "1.3.2"
 description = "Cross-ecosystem identity contract: principals, roles, scopes, and the four-function binding every enforcement point implements."
+authors = [{ name = "Kaiano Levine" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
@@ -28,6 +38,12 @@ dev = [
     "jsonschema>=4.23",
     "pre-commit>=3.8.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/mini-app-polis/identity"
+Repository = "https://github.com/mini-app-polis/identity"
+Changelog = "https://github.com/mini-app-polis/identity/blob/main/CHANGELOG.md"
+Issues = "https://github.com/mini-app-polis/identity/issues"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/mini-app-polis/identity/compare/v1.3.1...v1.3.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* **git:** never three-way merge a lockfile ([35cb52d](https://github.com/mini-app-polis/identity/commit/35cb52d08c625b234386b11b8658e467aee7a084))
+
 ## [1.3.1](https://github.com/mini-app-polis/identity/compare/v1.3.0...v1.3.1) (2026-09-04)
 
 

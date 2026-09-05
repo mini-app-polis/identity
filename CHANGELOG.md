@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/mini-app-polis/identity/compare/v2.0.0...v2.0.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **release:** verify PyPI trusted publishing before bumping the version ([6a54798](https://github.com/mini-app-polis/identity/commit/6a5479863a97e1b95cda3e4b6e9dbdbfcf000e10))
+
 # [2.0.0](https://github.com/mini-app-polis/identity/compare/v1.3.2...v2.0.0) (2026-09-05)
 
 

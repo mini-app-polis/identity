@@ -12,6 +12,35 @@ does it, and provides the fixture suite that proves any other binding agrees.
 The design ships here, with the implementation. `ecosystem-standards` holds
 rules, not designs, and no service depends on it.
 
+## Installation
+
+> **Install name:** `miniapppolis-identity` (PyPI) &nbsp;·&nbsp; **Import namespace:** `identity`
+>
+> `identity` was unavailable on PyPI — an unrelated Microsoft auth library
+> holds it — so the distribution is prefixed while the import namespace stays
+> as every enforcement point already writes it.
+
+```toml
+[project]
+dependencies = [
+  "miniapppolis-identity>=2.0,<3",
+]
+```
+
+A calling principal needs only the contract and the verifier. An enforcement
+point that resolves principals against a store adds the `[store]` extra,
+which pulls in SQLAlchemy:
+
+```toml
+dependencies = [
+  "miniapppolis-identity[store]>=2.0,<3",
+]
+```
+
+```python
+from identity import ChainVerifier, Principal, VerifiedSubject
+```
+
 ## Scope
 
 | In | Out |

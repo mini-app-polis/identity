@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/mini-app-polis/identity/compare/v2.0.1...v2.0.2) (2026-09-06)
+
+
+### Bug Fixes
+
+* **release:** source the version from a committed file instead of pyproject.toml ([ea9f9a9](https://github.com/mini-app-polis/identity/commit/ea9f9a9daa860240c0b2f63a6b8640e7f78da1ef))
+
 ## [2.0.1](https://github.com/mini-app-polis/identity/compare/v2.0.0...v2.0.1) (2026-09-05)
 
 

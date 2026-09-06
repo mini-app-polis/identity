@@ -23,6 +23,7 @@ Import:
     from identity import ChainVerifier, Principal, VerifiedSubject
 """
 
+from ._version import __version__ as __version__
 from .apikey import API_KEY_ISSUER, ApiKeyVerifier, MachineKey
 from .chain import ChainVerifier
 from .contract import (

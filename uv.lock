@@ -691,7 +691,6 @@ wheels = [
 
 [[package]]
 name = "miniapppolis-identity"
-version = "2.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
@@ -729,7 +728,7 @@ requires-dist = [
     { name = "sqlalchemy", marker = "extra == 'dev'", specifier = ">=2.0" },
     { name = "sqlalchemy", marker = "extra == 'store'", specifier = ">=2.0" },
 ]
-provides-extras = ["store", "dev"]
+provides-extras = ["dev", "store"]
 
 [[package]]
 name = "mypy"

@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/mini-app-polis/identity/compare/v2.0.2...v2.0.3) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps:** bump ruff in the python-minor-and-patch group ([7152631](https://github.com/mini-app-polis/identity/commit/7152631f78fbe002b4b5cb0f2df516699ec33619))
+
 ## [2.0.2](https://github.com/mini-app-polis/identity/compare/v2.0.1...v2.0.2) (2026-09-06)
 
 

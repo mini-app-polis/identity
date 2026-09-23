@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/mini-app-polis/identity/compare/v2.0.5...v2.1.0) (2026-09-23)
+
+
+### Features
+
+* **python-test:** warn when no typecheck input is passed ([b1e9e48](https://github.com/mini-app-polis/identity/commit/b1e9e4800ccd2c72922e6172beeb28ea23a75ad0))
+
 ## [2.0.5](https://github.com/mini-app-polis/identity/compare/v2.0.4...v2.0.5) (2026-09-21)
 
 

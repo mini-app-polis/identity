@@ -19,6 +19,5 @@ exemptions:
 # events to principals).
 
 # CD-002, CD-009, CD-010 (Sentry, shared logger, observability) are not in
-# shared-library scope — this repo has no service entry point. TEST-012 is
-# conditional on a [tool.mypy] block, which this repo does not declare; mypy
-# runs in CI regardless.
+# shared-library scope — this repo has no service entry point. TEST-012
+# applies: mypy runs in CI, against the [tool.mypy] block in pyproject.toml.

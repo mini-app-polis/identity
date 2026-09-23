@@ -66,6 +66,15 @@ packages = ["src/identity"]
 line-length = 88
 target-version = "py311"
 
+[tool.mypy]
+# TEST-012. mypy already ran in CI here on its defaults, which pinned
+# nothing: the result moved with the mypy release and the runner's Python.
+# No ignore_missing_imports — every import here resolves, so it would only
+# hide the day one stops resolving.
+python_version = "3.11"
+strict = false
+warn_unused_ignores = true
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

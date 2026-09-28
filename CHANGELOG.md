@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/mini-app-polis/identity/compare/v2.1.0...v2.1.1) (2026-09-28)
+
+
+### Bug Fixes
+
+* **deps:** bump ruff ([7544132](https://github.com/mini-app-polis/identity/commit/7544132b006e032af7f638e52712aa072a3796a0))
+* **deps:** require sqlalchemy[asyncio] for store and dev extras ([fae31b7](https://github.com/mini-app-polis/identity/commit/fae31b74bb153a09098fc9a90dc30fcd09a67615))
+
 # [2.1.0](https://github.com/mini-app-polis/identity/compare/v2.0.5...v2.1.0) (2026-09-23)
 
 

@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/mini-app-polis/identity/compare/v2.1.1...v2.1.2) (2026-09-29)
+
+
+### Bug Fixes
+
+* **deps:** require pyjwt>=2.14.0 for CVE-2026-102274 ([0e89049](https://github.com/mini-app-polis/identity/commit/0e89049aceefe269adbe4f1ba474232641320a02))
+
 ## [2.1.1](https://github.com/mini-app-polis/identity/compare/v2.1.0...v2.1.1) (2026-09-28)
 
 

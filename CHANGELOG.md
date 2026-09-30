@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/mini-app-polis/identity/compare/v2.1.2...v2.1.3) (2026-09-30)
+
+
+### Bug Fixes
+
+* **deps:** patch vulnerable dependencies (virtualenv) ([5e14e49](https://github.com/mini-app-polis/identity/commit/5e14e498c6010fe2bc35fa65d9534ee93837d130))
+
 ## [2.1.2](https://github.com/mini-app-polis/identity/compare/v2.1.1...v2.1.2) (2026-09-29)
 
 

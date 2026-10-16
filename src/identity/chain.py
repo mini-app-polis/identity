@@ -1,8 +1,7 @@
 """Routing a credential to the verifier that can prove it.
 
 An enforcement point serves populations that authenticate differently:
-machines holding named keys, humans holding issuer sessions, and — during a
-migration — machines still holding issuer-minted opaque tokens. This decides
+machines holding named keys and humans holding issuer sessions. This decides
 which mechanism a given credential belongs to.
 
 Routing is structural where it can be. A JWT is the only shape with two dots,

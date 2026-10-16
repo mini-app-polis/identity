@@ -1,7 +1,8 @@
 """SQLAlchemy-backed ``resolve`` and ``emit_audit``.
 
-Two of the four contract functions. ``verify`` lives in ``identity.clerk``
-because it talks to an issuer, not a database; ``authorize`` lives in
+Two of the four contract functions. ``verify`` lives in ``identity.clerk``,
+``identity.apikey`` and ``identity.chain`` because it talks to an issuer or
+configuration, not a database; ``authorize`` lives in
 ``identity.policy`` because it talks to neither.
 """
 

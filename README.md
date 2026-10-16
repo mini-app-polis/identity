@@ -131,8 +131,9 @@ One schema (`sql/principal-store.sql`), one instance per ecosystem database —
 not shared at runtime. The cogs + `api-kaianolevine-com` database gets one;
 `deejaytools-com` gets its own. They share the schema, never the rows.
 
-It installs into its own `identity` Postgres schema so it can be added to an
-existing database without colliding with application tables.
+Its tables are prefixed `identity_` in the default schema (not a Postgres
+schema of their own — see ADR-001) so it can be added to an existing database
+without colliding with application tables.
 
 ## Conformance
 
@@ -145,6 +146,8 @@ A binding is conformant when it passes the fixture suite. Nothing else counts.
 
 ## Status
 
-Early. The Python binding and the `authorize` fixture suite are real; `verify`
-and `resolve` reference implementations, the TypeScript binding, and the
-`verify`/`resolve`/`audit` fixture directories are not filled in yet.
+Early. The Python binding (`verify` via `identity.apikey`, `identity.clerk`
+and `identity.chain`; `resolve` and `emit_audit` via the `[store]` extra;
+`authorize` via `identity.policy`) and the `authorize` fixture suite are real;
+the TypeScript binding and the `verify`/`resolve`/`audit` fixture directories
+are not filled in yet.

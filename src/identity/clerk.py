@@ -7,12 +7,9 @@ into a thin consumer rather than copying it." A second enforcement point now
 exists, so it lands here instead — with the identity contract it serves,
 rather than in a general-purpose utility library.
 
-Two credential shapes, as Clerk issues them:
-
-  - RS256 JWTs (human sessions, and M2M JWTs) — verified locally against the
-    issuer's JWKS.
-  - M2M opaque tokens (machines) — verified by calling Clerk's BAPI, because
-    there is nothing in them to verify locally.
+One credential shape: RS256 JWTs (human sessions, and M2M JWTs), verified
+locally against the issuer's JWKS. Machines authenticate with named keys
+(``identity.apikey``); Clerk M2M opaque tokens are not accepted.
 
 Multi-issuer is the default, not an option. The two Clerk tenants are
 different products with different audiences; a verifier that assumes one

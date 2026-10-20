@@ -30,7 +30,11 @@ class Verifier(Protocol):
     """Step 1 — prove the credential and extract the issuer's subject."""
 
     async def verify(self, credential: str) -> VerifiedSubject:
-        """Raise CredentialInvalid or IssuerNotTrusted; never return None."""
+        """Raise CredentialInvalid, IssuerNotTrusted or IssuerUnavailable.
+
+        Never returns None, and never raises anything that is not an
+        IdentityError: an adapter maps exactly these three to responses.
+        """
         ...
 
 

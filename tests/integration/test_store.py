@@ -113,6 +113,28 @@ async def test_same_subject_in_two_tenants_resolves_to_different_principals(
     assert a.id != b.id
 
 
+async def test_principal_under_disabled_issuer_does_not_resolve(
+    session: AsyncSession,
+) -> None:
+    """Disabling an issuer withdraws trust from its whole tenant."""
+    ids = await _seed(session)
+    issuer_b = await session.get(Issuer, ISSUER_B)
+    assert issuer_b is not None
+    issuer_b.enabled = False
+    await session.commit()
+
+    store = SqlAlchemyPrincipalStore(session, enforcement_point="test")
+    b = await store.resolve(
+        VerifiedSubject(issuer=ISSUER_B, subject="user_1", kind="human")
+    )
+    a = await store.resolve(
+        VerifiedSubject(issuer=ISSUER_A, subject="user_1", kind="human")
+    )
+
+    assert b is None
+    assert a is not None and a.id == ids["human"]
+
+
 async def test_machine_resolves_with_its_roles(session: AsyncSession) -> None:
     ids = await _seed(session)
     store = SqlAlchemyPrincipalStore(session, enforcement_point="test")

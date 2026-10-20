@@ -19,6 +19,7 @@ from ..types import AuditEvent, Principal, Role, VerifiedSubject
 from .models import (
     AuditEventRow,
     ExplicitGrant,
+    Issuer,
     PrincipalRole,
     RoleScope,
 )
@@ -51,13 +52,22 @@ class SqlAlchemyPrincipalStore:
         None is not an error: a valid token from a trusted issuer for someone
         this ecosystem has never seen is an expected state, and the caller may
         legitimately provision on first sight.
+
+        A principal whose issuer row is disabled also resolves to None.
+        Disabling an issuer is how the store withdraws trust in a whole
+        tenant, so its principals become unresolvable — and are denied
+        ``principal_not_found`` — even while a verifier is still configured
+        to accept that issuer's tokens.
         """
         row = (
             (
                 await self._session.execute(
-                    select(PrincipalRow).where(
+                    select(PrincipalRow)
+                    .join(Issuer, Issuer.issuer == PrincipalRow.issuer)
+                    .where(
                         PrincipalRow.issuer == subject.issuer,
                         PrincipalRow.subject == subject.subject,
+                        Issuer.enabled.is_(True),
                     )
                 )
             )

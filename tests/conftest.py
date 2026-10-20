@@ -27,3 +27,14 @@ def authorize_cases() -> list[dict]:
 @pytest.fixture(scope="session")
 def schema_dir() -> Path:
     return SCHEMA
+
+
+def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+    """Parametrize ``authorize_case`` over every case in the fixture file.
+
+    Done at collection time from the file, so the number of tests is the
+    number of cases — adding a case adds a test, with no count to update.
+    """
+    if "authorize_case" in metafunc.fixturenames:
+        cases = _load(FIXTURES / "authorize" / "cases.json")["cases"]
+        metafunc.parametrize("authorize_case", cases, ids=[c["name"] for c in cases])

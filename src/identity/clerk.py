@@ -27,18 +27,32 @@ import httpx
 import jwt
 from jwt import PyJWK
 
-from .errors import CredentialInvalid, IssuerNotTrusted
+from .errors import CredentialInvalid, IssuerNotTrusted, IssuerUnavailable
 from .types import PrincipalKind, VerifiedSubject
 
 _JWKS_TTL_SECS = 300.0
+# The least time between two JWKS fetches forced by an unknown ``kid``. The
+# kid is attacker-chosen and the forced fetch happens before any signature
+# work, so without a floor every forged token would cost an outbound request.
+_KID_MISS_REFETCH_SECS = 60.0
+# Claims a token must carry for its signature check to mean anything: without
+# ``exp`` a leaked token is valid forever.
+_REQUIRED_CLAIMS = ["exp", "iat", "sub", "iss"]
 
 
 @dataclass(frozen=True, slots=True)
 class ClerkIssuer:
-    """One trusted Clerk tenant."""
+    """One trusted Clerk tenant.
+
+    ``authorized_parties`` pins the origins a session token may have been
+    minted for, checked against the token's ``azp``. Clerk session tokens
+    carry ``azp`` rather than ``aud``, so this is the audience check for
+    them. Empty means not checked.
+    """
 
     issuer: str
     jwks_url: str
+    authorized_parties: tuple[str, ...] = ()
 
 
 class ClerkVerifier:
@@ -55,6 +69,7 @@ class ClerkVerifier:
         self._issuers = {i.issuer: i for i in issuers}
         self._http_timeout = http_timeout
         self._jwks_cache: dict[str, tuple[float, dict[str, Any]]] = {}
+        self._kid_miss_refetch_at: dict[str, float] = {}
 
     @property
     def trusted_issuers(self) -> tuple[str, ...]:
@@ -105,6 +120,11 @@ class ClerkVerifier:
         except Exception as exc:
             raise CredentialInvalid("JWT verification failed") from exc
 
+        if trusted.authorized_parties:
+            azp = payload.get("azp")
+            if azp not in trusted.authorized_parties:
+                raise CredentialInvalid(f"JWT azp {azp!r} is not authorized")
+
         subject = payload.get("sub")
         if not isinstance(subject, str) or not subject:
             raise CredentialInvalid("JWT has no subject")
@@ -119,41 +139,80 @@ class ClerkVerifier:
     def _decode_verified(
         token: str, jwk_dict: dict[str, Any], issuer: str
     ) -> dict[str, Any]:
+        """Check signature, issuer and lifetime; require the core claims.
+
+        ``aud`` is deliberately not verified: Clerk session tokens carry
+        ``azp`` instead, which ``ClerkIssuer.authorized_parties`` checks.
+        """
         signing_key = PyJWK.from_dict(jwk_dict)
         decoded: dict[str, Any] = jwt.decode(
             token,
             signing_key.key,
             algorithms=["RS256"],
             issuer=issuer,
-            options={"verify_aud": False},
+            options={"verify_aud": False, "require": _REQUIRED_CLAIMS},
         )
         return decoded
 
     async def _signing_key(self, jwks_url: str, kid: str) -> dict[str, Any]:
-        doc = await self._jwks(jwks_url)
-        keys = doc.get("keys")
-        if not isinstance(keys, list):
-            raise CredentialInvalid("JWKS document has no keys")
-        for key in keys:
-            if isinstance(key, dict) and key.get("kid") == kid:
-                return key
-        # One retry with a cold cache: a rotated signing key is the ordinary
-        # cause of a kid miss, and the alternative is 5 minutes of 401s.
+        """Find the JWK for ``kid``, refetching at most once a minute on a miss.
+
+        A rotated signing key is the ordinary cause of a kid miss, so a miss
+        forces one fetch with a cold cache rather than serving 5 minutes of
+        401s. But the kid comes from an unauthenticated caller, so that
+        forced fetch is rate-limited per issuer: within
+        ``_KID_MISS_REFETCH_SECS`` of the last one — or of the cached
+        document being fetched at all — an unknown kid is simply invalid.
+        """
+        key = self._find_key(await self._jwks(jwks_url), kid)
+        if key is not None:
+            return key
+
+        now = time.monotonic()
+        last = self._kid_miss_refetch_at.get(jwks_url)
+        hit = self._jwks_cache.get(jwks_url)
+        fetched_at = hit[0] - _JWKS_TTL_SECS if hit is not None else None
+        if any(
+            t is not None and now - t < _KID_MISS_REFETCH_SECS
+            for t in (last, fetched_at)
+        ):
+            raise CredentialInvalid(f"no JWK for kid {kid}")
+
+        # Stamped before the await, so concurrent misses see it and do not
+        # each start a fetch of their own.
+        self._kid_miss_refetch_at[jwks_url] = now
         self._jwks_cache.pop(jwks_url, None)
-        doc = await self._jwks(jwks_url)
-        for key in doc.get("keys", []):
-            if isinstance(key, dict) and key.get("kid") == kid:
-                return key
+        key = self._find_key(await self._jwks(jwks_url), kid)
+        if key is not None:
+            return key
         raise CredentialInvalid(f"no JWK for kid {kid}")
 
+    @staticmethod
+    def _find_key(doc: dict[str, Any], kid: str) -> dict[str, Any] | None:
+        for key in doc["keys"]:
+            if isinstance(key, dict) and key.get("kid") == kid:
+                return key
+        return None
+
     async def _jwks(self, jwks_url: str) -> dict[str, Any]:
+        """The issuer's key set, cached for ``_JWKS_TTL_SECS``.
+
+        Every way the fetch can fail raises IssuerUnavailable: an issuer
+        outage says nothing about the credential, and anything that is not
+        an IdentityError would escape the Verifier contract as a 500.
+        """
         now = time.monotonic()
         hit = self._jwks_cache.get(jwks_url)
         if hit is not None and now < hit[0]:
             return hit[1]
-        async with httpx.AsyncClient(timeout=self._http_timeout) as client:
-            resp = await client.get(jwks_url)
-            resp.raise_for_status()
-            doc: dict[str, Any] = resp.json()
+        try:
+            async with httpx.AsyncClient(timeout=self._http_timeout) as client:
+                resp = await client.get(jwks_url)
+                resp.raise_for_status()
+                doc = resp.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            raise IssuerUnavailable(f"JWKS fetch failed: {jwks_url}") from exc
+        if not isinstance(doc, dict) or not isinstance(doc.get("keys"), list):
+            raise IssuerUnavailable(f"JWKS document has no keys: {jwks_url}")
         self._jwks_cache[jwks_url] = (now + _JWKS_TTL_SECS, doc)
         return doc

@@ -33,7 +33,12 @@ from .contract import (
     PrincipalResolver,
     Verifier,
 )
-from .errors import CredentialInvalid, IdentityError, IssuerNotTrusted
+from .errors import (
+    CredentialInvalid,
+    IdentityError,
+    IssuerNotTrusted,
+    IssuerUnavailable,
+)
 from .types import (
     AuditEvent,
     AuthorizationDecision,
@@ -58,6 +63,7 @@ __all__ = [
     "IdentityBinding",
     "IdentityError",
     "IssuerNotTrusted",
+    "IssuerUnavailable",
     "MachineKey",
     "Principal",
     "PrincipalKind",

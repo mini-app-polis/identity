@@ -1,3 +1,10 @@
+## [2.1.6](https://github.com/mini-app-polis/identity/compare/v2.1.5...v2.1.6) (2026-10-20)
+
+
+### Bug Fixes
+
+* **clerk:** raise IssuerUnavailable on JWKS failure, rate-limit kid refetch, require exp/iat ([9a0d7de](https://github.com/mini-app-polis/identity/commit/9a0d7ded3e75c25e7d7c67fc94eeac65adff00fe))
+
 ## [2.1.5](https://github.com/mini-app-polis/identity/compare/v2.1.4...v2.1.5) (2026-10-20)
 
 

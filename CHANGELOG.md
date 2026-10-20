@@ -1,3 +1,10 @@
+## [2.1.5](https://github.com/mini-app-polis/identity/compare/v2.1.4...v2.1.5) (2026-10-20)
+
+
+### Bug Fixes
+
+* **deps:** bump certifi to 2026.10.19 for GHSA-6q48-6c7w-9gw2 ([98a797e](https://github.com/mini-app-polis/identity/commit/98a797e503e8f870bcafbfaa67f2503a9ee92154))
+
 ## [2.1.4](https://github.com/mini-app-polis/identity/compare/v2.1.3...v2.1.4) (2026-10-11)
 
 

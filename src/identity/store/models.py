@@ -46,6 +46,8 @@ class Issuer(IdentityBase):
     # has no key set to fetch, because verification is a local comparison
     # against configuration rather than a signature check.
     jwks_url: Mapped[str | None] = mapped_column(String, nullable=True)
+    # False withdraws trust from the whole tenant: resolve returns None for
+    # every principal under a disabled issuer.
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

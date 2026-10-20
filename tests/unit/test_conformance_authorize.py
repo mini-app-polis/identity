@@ -10,8 +10,6 @@ from __future__ import annotations
 
 import uuid
 
-import pytest
-
 from identity.policy import authorize
 from identity.types import Principal, Role
 
@@ -49,11 +47,12 @@ def test_every_case_runs(authorize_cases: list[dict], fixture_roles: dict) -> No
     assert {c["name"] for c in authorize_cases}
 
 
-@pytest.mark.parametrize("case_index", range(13))
-def test_authorize_matches_fixture(
-    case_index: int, authorize_cases: list[dict], fixture_roles: dict
-) -> None:
-    case = authorize_cases[case_index]
+def test_authorize_matches_fixture(authorize_case: dict, fixture_roles: dict) -> None:
+    """One test per fixture case, parametrized in conftest from the file itself.
+
+    A hand-written count here would let a newly added case silently never run.
+    """
+    case = authorize_case
     grants = {tuple(g) for g in case.get("explicit_grants", [])}
 
     decision = authorize(

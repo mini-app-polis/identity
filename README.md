@@ -94,6 +94,20 @@ and simply lack this scope" — and cannot record any of them.
 ecosystem* knows about you. Keeping them separate is what stops `sub` being used
 as a primary key.
 
+## Errors
+
+Only `verify` raises, and only subclasses of `IdentityError`. An adapter maps
+each to a response:
+
+| Error | Means | Response |
+|---|---|---|
+| `CredentialInvalid` | The credential failed verification | 401 |
+| `IssuerNotTrusted` | Correctly shaped, from an issuer this enforcement point was never told about | 401 |
+| `IssuerUnavailable` | A trusted issuer's key set could not be fetched; says nothing about the credential | 503 |
+
+Each carries a reason for the enforcement point's logs. The reason is not
+returned to the caller.
+
 ## Principals
 
 Humans and machines are the same shape and resolve through the same decision.
@@ -134,6 +148,10 @@ not shared at runtime. The cogs + `api-kaianolevine-com` database gets one;
 Its tables are prefixed `identity_` in the default schema (not a Postgres
 schema of their own — see ADR-001) so it can be added to an existing database
 without colliding with application tables.
+
+An issuer row with `enabled` false withdraws trust from the whole tenant:
+`resolve` returns None for its principals, so they are denied
+`principal_not_found` whatever roles they hold.
 
 ## Conformance
 

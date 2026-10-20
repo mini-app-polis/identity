@@ -15,9 +15,10 @@ class IdentityError(Exception):
 class CredentialInvalid(IdentityError):
     """The presented credential failed verification.
 
-    Deliberately carries no detail about *why*. The reason is recorded in the
-    audit event; it is not handed back to the caller, who is by definition
-    unauthenticated at this point.
+    Raised with a short reason ("malformed JWT", "no JWK for kid ...") for
+    the enforcement point's logs. The reason is not for the response: an
+    adapter maps this to a bare 401 and hands nothing more back to the
+    caller, who is by definition unauthenticated at this point.
     """
 
 
@@ -27,4 +28,15 @@ class IssuerNotTrusted(IdentityError):
     Distinct from CredentialInvalid because it is an operator error, not an
     attacker signal: a correctly-signed token from a Clerk tenant this
     enforcement point was never told about.
+    """
+
+
+class IssuerUnavailable(IdentityError):
+    """A trusted issuer could not be consulted to verify the credential.
+
+    The JWKS fetch failed: the issuer was unreachable, answered with an
+    error status, or served something that is not a key set. Distinct from
+    CredentialInvalid because it says nothing about the credential — the
+    same token may verify a minute later — so an adapter maps it to a 503,
+    not a 401. Left unmapped it would surface as a 500.
     """

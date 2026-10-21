@@ -1,3 +1,11 @@
+## [2.1.7](https://github.com/mini-app-polis/identity/compare/v2.1.6...v2.1.7) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** patch vulnerable dependencies (virtualenv) ([859f855](https://github.com/mini-app-polis/identity/commit/859f85525a88192689535df04ec303c2b5536e29))
+* **release:** retry PyPI's token exchange when it does not answer, and stop blaming the publisher for it ([7d01950](https://github.com/mini-app-polis/identity/commit/7d01950599bc594de679cb64ef161c1fedb3ac2b))
+
 ## [2.1.6](https://github.com/mini-app-polis/identity/compare/v2.1.5...v2.1.6) (2026-10-20)
 
 

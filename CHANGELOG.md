@@ -1,3 +1,11 @@
+## [2.1.9](https://github.com/mini-app-polis/identity/compare/v2.1.8...v2.1.9) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** patch vulnerable dependencies (filelock) ([843bcc0](https://github.com/mini-app-polis/identity/commit/843bcc03df87acf938e3573670a340c648937209))
+* **deps:** patch vulnerable dependencies (virtualenv) ([f19cf81](https://github.com/mini-app-polis/identity/commit/f19cf81c03b4d96d1fc2b01f4c2f9bd0d2753520))
+
 ## [2.1.8](https://github.com/mini-app-polis/identity/compare/v2.1.7...v2.1.8) (2026-10-21)
 
 

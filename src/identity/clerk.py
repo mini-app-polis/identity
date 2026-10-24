@@ -1,11 +1,9 @@
 """``verify`` for Clerk-issued credentials — the Clerk half of the binding.
 
-This is the upstreaming that ``api-kaianolevine-com``'s ``auth.py`` docstring
-asked for in as many words: "If a second service ever needs to verify Clerk
-tokens, upstream this logic to common-python-utils and convert this module
-into a thin consumer rather than copying it." A second enforcement point now
-exists, so it lands here instead — with the identity contract it serves,
-rather than in a general-purpose utility library.
+Clerk verification lives here because more than one service enforces the
+identity contract: each verifies tokens through this module rather than
+keeping its own copy. It sits with the contract it serves rather than in a
+general-purpose utility library.
 
 One credential shape: RS256 JWTs (human sessions, and M2M JWTs), verified
 locally against the issuer's JWKS. Machines authenticate with named keys

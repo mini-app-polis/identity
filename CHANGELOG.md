@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/mini-app-polis/identity/compare/v2.2.0...v2.3.0) (2026-10-25)
+
+
+### Features
+
+* **audit:** an audit event records which of a machine's keys proved it ([3e8dbaf](https://github.com/mini-app-polis/identity/commit/3e8dbaf4f7ae25a83be86afd01f1100d1606ad48))
+
 # [2.2.0](https://github.com/mini-app-polis/identity/compare/v2.1.10...v2.2.0) (2026-10-25)
 
 

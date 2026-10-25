@@ -50,3 +50,9 @@ def test_decision_reasons_in_fixtures_are_declared_in_schema(
     allowed = set(doc["properties"]["reason"]["enum"])
     for case in authorize_cases:
         assert case["expected"]["reason"] in allowed, case["name"]
+
+
+def test_an_audit_event_may_name_the_key_slot_and_need_not(schema_dir: Path) -> None:
+    doc = json.loads((schema_dir / "audit-event.schema.json").read_text())
+    assert doc["properties"]["key_slot"]["enum"] == ["current", "previous", None]
+    assert "key_slot" not in doc["required"]

@@ -208,3 +208,6 @@ class AuditEventRow(IdentityBase):
     allowed: Mapped[bool] = mapped_column(Boolean, nullable=False)
     reason: Mapped[str] = mapped_column(String, nullable=False)
     request_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Which of a machine's named keys proved it ("current" or "previous");
+    # NULL for any other credential.
+    key_slot: Mapped[str | None] = mapped_column(String, nullable=True)

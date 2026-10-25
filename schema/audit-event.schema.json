@@ -22,6 +22,11 @@
     "resource": { "type": ["string", "null"], "default": null },
     "allowed": { "type": "boolean" },
     "reason": { "$ref": "authorization-decision.schema.json#/properties/reason" },
-    "request_id": { "type": ["string", "null"], "default": null }
+    "request_id": { "type": ["string", "null"], "default": null },
+    "key_slot": {
+      "enum": ["current", "previous", null],
+      "default": null,
+      "description": "Which of a machine's named keys proved it, while a rotation overlaps a current and a previous key. Null for any other credential, and for events from before it was recorded."
+    }
   }
 }

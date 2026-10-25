@@ -248,3 +248,35 @@ async def test_audit_survives_principal_deletion(session: AsyncSession) -> None:
     rows = (await session.execute(select(AuditEventRow))).scalars().all()
     assert len(rows) == 1
     assert rows[0].principal_id == ids["machine"]
+
+
+@pytest.mark.parametrize("slot", ["current", "previous", None])
+async def test_audit_records_which_named_key_proved_the_machine(
+    session: AsyncSession, slot: str | None
+) -> None:
+    """A previous key is retired once no event names it."""
+    await _seed(session)
+    subject = VerifiedSubject(
+        issuer=ISSUER_A,
+        subject="mch_deejay_cog",
+        kind="machine",
+        key_slot=slot,  # type: ignore[arg-type]
+    )
+    principal = await SqlAlchemyPrincipalStore(
+        session, enforcement_point="api-test"
+    ).resolve(subject)
+    event = new_audit_event(
+        enforcement_point="api-test",
+        scope="catalog.sets.write",
+        allowed=True,
+        reason="granted_by_role",
+        principal=principal,
+        subject=subject,
+    )
+    assert event.key_slot == slot
+    await SqlAlchemyAuditSink(session).emit_audit(event)
+
+    from sqlalchemy import select
+
+    (row,) = (await session.execute(select(AuditEventRow))).scalars().all()
+    assert row.key_slot == slot

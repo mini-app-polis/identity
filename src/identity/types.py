@@ -113,3 +113,6 @@ class AuditEvent:
     subject: str | None = None
     resource: str | None = None
     request_id: str | None = None
+    #: Which of a machine's named keys proved it; None for any other
+    #: credential. A previous key is retired once no event names it.
+    key_slot: KeySlot | None = None

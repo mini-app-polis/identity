@@ -166,6 +166,7 @@ class SqlAlchemyAuditSink:
                     allowed=event.allowed,
                     reason=event.reason,
                     request_id=event.request_id,
+                    key_slot=event.key_slot,
                 )
             )
             await self._session.commit()
@@ -209,4 +210,5 @@ def new_audit_event(
         else (subject.subject if subject else None),
         resource=resource,
         request_id=request_id,
+        key_slot=subject.key_slot if subject else None,
     )

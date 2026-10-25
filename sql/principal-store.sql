@@ -101,8 +101,15 @@ CREATE TABLE IF NOT EXISTS identity_audit_events (
   resource           TEXT,
   allowed            BOOLEAN NOT NULL,
   reason             TEXT NOT NULL,
-  request_id         TEXT
+  request_id         TEXT,
+  -- Which of a machine's named keys proved it; NULL for any other credential.
+  key_slot           TEXT CHECK (key_slot IN ('current', 'previous'))
 );
+
+-- For a store created before key_slot existed.
+ALTER TABLE identity_audit_events
+  ADD COLUMN IF NOT EXISTS key_slot TEXT
+    CHECK (key_slot IN ('current', 'previous'));
 
 CREATE INDEX IF NOT EXISTS idx_identity_audit_occurred_at
   ON identity_audit_events(occurred_at DESC);

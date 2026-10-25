@@ -16,6 +16,11 @@ from typing import Literal
 PrincipalKind = Literal["human", "machine"]
 PrincipalStatus = Literal["active", "suspended"]
 
+#: Which of a machine's configured keys a credential matched. A key being
+#: rotated out stays accepted as ``previous`` until it is retired; recording
+#: the slot is how retirement can tell when nothing presents it any more.
+KeySlot = Literal["current", "previous"]
+
 DecisionReason = Literal[
     "granted_by_role",
     "granted_by_explicit_grant",
@@ -34,12 +39,19 @@ class VerifiedSubject:
     This is intentionally not a Principal. Verification proves who the issuer
     says you are; it says nothing about what this ecosystem knows about you.
     Collapsing the two is how ``sub`` ends up used as a primary key.
+
+    ``key_slot`` is set only by named-key verification, and says which of the
+    machine's keys matched. It is a field of its own rather than a claim
+    because claims come from the credential: an issuer-signed token could
+    carry a claim of any name, and a slot read from one would be whatever the
+    token said. None for every other verifier.
     """
 
     issuer: str
     subject: str
     kind: PrincipalKind
     claims: dict[str, object] = field(default_factory=dict)
+    key_slot: KeySlot | None = None
 
 
 @dataclass(frozen=True, slots=True)

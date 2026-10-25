@@ -69,6 +69,12 @@ configuration; the store holds names, status and roles. A database dump
 exposes no credentials, and rotating a key is a configuration change rather
 than a migration.
 
+Rotation overlaps rather than cuts over. A `MachineKey` may carry a `previous`
+key alongside its current one, and either proves the machine. The
+`VerifiedSubject` it produces says which matched in `key_slot` (`current` or
+`previous`; None for issuer-verified subjects), so an enforcement point can
+record it and the old key can be retired once nothing presents it.
+
 Both paths converge immediately after verification: one principal table, one
 role model, one authorization decision, one audit trail. `authorize` does not
 branch on how the caller was authenticated, and could not — by then the

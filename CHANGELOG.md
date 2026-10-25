@@ -1,3 +1,10 @@
+## [2.1.10](https://github.com/mini-app-polis/identity/compare/v2.1.9...v2.1.10) (2026-10-25)
+
+
+### Bug Fixes
+
+* **deps:** bump the minor-and-patch group with 2 updates ([1a9add8](https://github.com/mini-app-polis/identity/commit/1a9add81ec5895e3e75a0ff762e23a3d6531c51f))
+
 ## [2.1.9](https://github.com/mini-app-polis/identity/compare/v2.1.8...v2.1.9) (2026-10-23)
 
 

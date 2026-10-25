@@ -146,7 +146,7 @@ not shared at runtime. The cogs + `api-kaianolevine-com` database gets one;
 `deejaytools-com` gets its own. They share the schema, never the rows.
 
 Its tables are prefixed `identity_` in the default schema (not a Postgres
-schema of their own — see ADR-001) so it can be added to an existing database
+schema of their own — see ADR-0001) so it can be added to an existing database
 without colliding with application tables.
 
 An issuer row with `enabled` false withdraws trust from the whole tenant:

@@ -1,4 +1,4 @@
-# ADR-002: No Foreign Key From Audit Events to Principals
+# ADR-0002: No Foreign Key From Audit Events to Principals
 
 **Date:** 2026-09-02
 **Status:** Accepted

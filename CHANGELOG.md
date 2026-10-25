@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/mini-app-polis/identity/compare/v2.1.10...v2.2.0) (2026-10-25)
+
+
+### Features
+
+* **apikey:** accept a current and a previous key per machine and report which matched ([56e28fd](https://github.com/mini-app-polis/identity/commit/56e28fd3150551f0c13cf73d3f20cd8d5dcde0f4))
+
 ## [2.1.10](https://github.com/mini-app-polis/identity/compare/v2.1.9...v2.1.10) (2026-10-25)
 
 

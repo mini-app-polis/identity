@@ -1,5 +1,5 @@
 # identity / evaluator.yaml
-# Per-repo evaluation configuration — ecosystem-standards ADR-001, ADR-002
+# Per-repo evaluation configuration — ecosystem-standards ADR-0001, ADR-0002
 
 type: shared-library
 
@@ -14,8 +14,8 @@ exemptions:
     reason: "identity reads no environment of its own. Configuration is passed in by the consuming service: ClerkIssuer objects and MachineKey values are constructor arguments, resolved from that service's own settings and documented in that service's .env.example (CD-019). A .env.example here would document variables the library never reads."
 
 # No active deferrals. The ecosystem-wide decision behind this library is
-# ecosystem-standards ADR-008; the library-local ones are ADR-001 (prefixed
-# tables over a Postgres schema) and ADR-002 (no foreign key from audit
+# ecosystem-standards ADR-0008; the library-local ones are ADR-0001 (prefixed
+# tables over a Postgres schema) and ADR-0002 (no foreign key from audit
 # events to principals).
 
 # CD-002, CD-009, CD-010 (Sentry, shared logger, observability) are not in

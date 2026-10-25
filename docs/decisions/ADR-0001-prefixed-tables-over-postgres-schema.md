@@ -1,4 +1,4 @@
-# ADR-001: Prefixed Tables Over a Postgres Schema
+# ADR-0001: Prefixed Tables Over a Postgres Schema
 
 **Date:** 2026-09-02
 **Status:** Accepted

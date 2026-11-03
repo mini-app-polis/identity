@@ -3,6 +3,14 @@
 
 type: shared-library
 
+layout_exceptions:
+  - path: schema
+    reason: "The language-neutral definitions of the identity contract (principal, role, decision, audit event) that every binding implements. Only the contract's own repo carries them."
+  - path: fixtures
+    reason: "The conformance fixtures every binding must pass: the same inputs and expected decisions in every language. Only the contract's own repo carries them."
+  - path: sql
+    reason: "The principal store's schema, one instance per ecosystem database. It belongs to the contract, so only this repo carries it."
+
 exemptions:
   - rule: XSTACK-001
     reason: "identity sits below common-python-utils, not beside it. It is the contract every enforcement point binds — api-kaianolevine-com consumes it, and common-python-utils' API client speaks the credential format it defines. Declaring common-python-utils as a dependency would invert that layering and risk a cycle the moment the shared library needs the contract. identity depends only on pyjwt and httpx, with SQLAlchemy behind the optional [store] extra so a caller that has no principal store does not carry one."

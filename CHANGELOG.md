@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/mini-app-polis/identity/compare/v2.3.1...v2.4.0) (2026-11-05)
+
+
+### Features
+
+* **facts:** publish the test-function count ([46c8936](https://github.com/mini-app-polis/identity/commit/46c8936e7a8459b7caa689273ba2e3dbb2ae0756))
+
 ## [2.3.1](https://github.com/mini-app-polis/identity/compare/v2.3.0...v2.3.1) (2026-11-01)
 
 

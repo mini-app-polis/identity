@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/mini-app-polis/identity/compare/v2.4.0...v2.5.0) (2026-11-08)
+
+
+### Features
+
+* run on Python 3.14 ([2ea4feb](https://github.com/mini-app-polis/identity/commit/2ea4febd9aa5f909c8ee47594a26ee5f54b886a4))
+
 # [2.4.0](https://github.com/mini-app-polis/identity/compare/v2.3.1...v2.4.0) (2026-11-05)
 
 

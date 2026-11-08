@@ -14,7 +14,7 @@ description = "Cross-ecosystem identity contract: principals, roles, scopes, and
 authors = [{ name = "Kaiano Levine" }]
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 dependencies = [
     "httpx",
     "pyjwt[crypto]>=2.14.0",
@@ -71,7 +71,7 @@ target-version = "py311"
 # nothing: the result moved with the mypy release and the runner's Python.
 # No ignore_missing_imports — every import here resolves, so it would only
 # hide the day one stops resolving.
-python_version = "3.11"
+python_version = "3.14"
 strict = false
 warn_unused_ignores = true
 

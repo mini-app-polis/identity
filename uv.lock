@@ -540,6 +540,11 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+store = [
+    { name = "sqlalchemy", extra = ["asyncio"] },
+]
+
+[package.dev-dependencies]
 dev = [
     { name = "aiosqlite" },
     { name = "jsonschema" },
@@ -551,26 +556,27 @@ dev = [
     { name = "ruff" },
     { name = "sqlalchemy", extra = ["asyncio"] },
 ]
-store = [
-    { name = "sqlalchemy", extra = ["asyncio"] },
-]
 
 [package.metadata]
 requires-dist = [
-    { name = "aiosqlite", marker = "extra == 'dev'", specifier = ">=0.20.0" },
     { name = "httpx" },
-    { name = "jsonschema", marker = "extra == 'dev'", specifier = ">=4.23" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11.2" },
-    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.8.0" },
     { name = "pyjwt", extras = ["crypto"], specifier = ">=2.14.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.2" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.8.0" },
-    { name = "sqlalchemy", extras = ["asyncio"], marker = "extra == 'dev'", specifier = ">=2.0" },
     { name = "sqlalchemy", extras = ["asyncio"], marker = "extra == 'store'", specifier = ">=2.0" },
 ]
-provides-extras = ["dev", "store"]
+provides-extras = ["store"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "aiosqlite", specifier = ">=0.20.0" },
+    { name = "jsonschema", specifier = ">=4.23" },
+    { name = "mypy", specifier = ">=1.11.2" },
+    { name = "pre-commit", specifier = ">=3.8.0" },
+    { name = "pytest", specifier = ">=8.3.2" },
+    { name = "pytest-asyncio", specifier = ">=0.24.0" },
+    { name = "pytest-cov", specifier = ">=5.0.0" },
+    { name = "ruff", specifier = ">=0.8.0" },
+    { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0" },
+]
 
 [[package]]
 name = "mypy"

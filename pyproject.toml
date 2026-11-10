@@ -27,6 +27,17 @@ dependencies = [
 store = [
     "sqlalchemy[asyncio]>=2.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/mini-app-polis/identity"
+Repository = "https://github.com/mini-app-polis/identity"
+Changelog = "https://github.com/mini-app-polis/identity/blob/main/CHANGELOG.md"
+Issues = "https://github.com/mini-app-polis/identity/issues"
+
+[dependency-groups]
+# Installed by every `uv sync` and `uv run` (uv's default group), so a
+# rebuilt .venv always has the pre-commit hook's tools; deploys leave it
+# out with --no-dev.
 dev = [
     "aiosqlite>=0.20.0",
     "sqlalchemy[asyncio]>=2.0",
@@ -38,12 +49,6 @@ dev = [
     "jsonschema>=4.23",
     "pre-commit>=3.8.0",
 ]
-
-[project.urls]
-Homepage = "https://github.com/mini-app-polis/identity"
-Repository = "https://github.com/mini-app-polis/identity"
-Changelog = "https://github.com/mini-app-polis/identity/blob/main/CHANGELOG.md"
-Issues = "https://github.com/mini-app-polis/identity/issues"
 
 [build-system]
 requires = ["hatchling"]
